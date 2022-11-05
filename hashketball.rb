@@ -126,4 +126,71 @@ def game_hash
   }
 end
 
+require "pry"
 # Write code here
+# Helpers code
+def all_players
+  game_hash[:home][:players].concat(game_hash[:away][:players])
+end
+
+def find_player (name)
+  all_players.find {|player| player[:player_name] == name}
+end
+
+def num_points_scored (name)
+  find_player(name) [:points]
+end
+
+def shoe_size (name)
+  find_player(name) [:shoe]
+end
+
+def find_team (name)
+  game_hash.find {|location, team_data| team_data[:team_name] == name} [1]
+end
+
+def team_colors (name)
+   find_team(name) [:colors]
+end
+
+def team_names
+  team = [] 
+  game_hash.each {|location, team_data| team << team_data[:team_name]}
+  team
+end
+
+def player_numbers (name)
+  numbers = []
+  find_team(name) [:players].each{|player| numbers << player[:number]}
+  numbers
+end
+
+def player_stats (name)
+  all_players.find{|player| player[:player_name] == name}
+end
+def find_biggest_shoe
+  big_foot = all_players.first
+  all_players.each do |player|
+    if player[:shoe] > big_foot[:shoe]
+      big_foot = player
+    end
+  end
+  big_foot
+end
+
+def big_shoe_rebounds
+  find_biggest_shoe[:rebounds]
+end
+
+
+# def test 
+#   game_hash.each do |location, team_data|
+#     puts "location = #{location}"
+#     puts "team_data = #{team_data[:team_name]}"
+#     team_data.each do |attribute, data|
+#       puts "attribute = #{attribute}"
+#       puts "data = #{data}"
+#     end
+#   end
+# end
+# test
