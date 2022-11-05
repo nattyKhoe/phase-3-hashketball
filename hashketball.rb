@@ -126,4 +126,121 @@ def game_hash
   }
 end
 
+require "pry"
 # Write code here
+# Helpers code
+def all_players
+  game_hash[:home][:players].concat(game_hash[:away][:players])
+end
+
+def find_player (name)
+  all_players.find {|player| player[:player_name] == name}
+end
+
+def num_points_scored (name)
+  find_player(name) [:points]
+end
+
+def shoe_size (name)
+  find_player(name) [:shoe]
+end
+
+def find_team (name)
+  game_hash.find {|location, team_data| team_data[:team_name] == name} [1]
+end
+
+def team_colors (name)
+   find_team(name) [:colors]
+end
+
+def team_names
+  team = [] 
+  game_hash.each {|location, team_data| team << team_data[:team_name]}
+  team
+end
+
+def player_numbers (name)
+  numbers = []
+  find_team(name) [:players].each{|player| numbers << player[:number]}
+  numbers
+end
+
+def player_stats (name)
+  all_players.find{|player| player[:player_name] == name}
+end
+
+def find_biggest_shoe
+  big_foot = all_players.first
+  all_players.each do |player|
+    if player[:shoe] > big_foot[:shoe]
+      big_foot = player
+    end
+  end
+  big_foot
+end
+
+def big_shoe_rebounds
+  find_biggest_shoe[:rebounds]
+end
+
+def most_points_scored
+  winner = all_players.first
+
+  all_players.each do |player|
+    if player [:points] > winner [:points]
+      winner = player
+    end
+  end
+
+  winner [:player_name]
+end
+
+def winning_team
+  home_score = 0
+  away_score = 0
+
+  game_hash[:home][:players].each do |player|
+    home_score = home_score + player[:points]
+  end
+  game_hash[:away][:players].each do |player|
+    away_score = away_score + player[:points]
+  end
+
+  if home_score > away_score 
+    game_hash[:home][:team_name]
+  elsif away_score < home_score
+    game_hash[:away][team_name]
+  else
+    "It is a draw"
+  end
+  
+end
+
+def player_with_longest_name
+  name = all_players.first[:player_name]
+
+  all_players.each do |player|
+    if player[:player_name].length > name.length
+      name = player[:player_name]
+    end
+  end
+
+  name
+end
+
+def long_name_steals_a_ton?
+  thief = all_players.first
+
+  all_players.each do |player|
+    if player [:steals] > thief [:steals]
+      thief = player
+    end
+  end
+
+  thief[:player_name] == player_with_longest_name
+
+end
+
+puts long_name_steals_a_ton?
+
+
